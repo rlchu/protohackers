@@ -1,6 +1,6 @@
 # Protohackers
 
-**TODO: Add description**
+Protohackers challenges in Elixir in full embrace of the BEAM!
 
 ## Installation
 
