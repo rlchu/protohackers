@@ -1,5 +1,5 @@
 defmodule Protohackers do
-  # taken basidally straight from:
+  # taken basically straight from:
   # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
 
