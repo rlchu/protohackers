@@ -22,7 +22,7 @@ defmodule Protohackers do
     {:ok, client} = :gen_tcp.accept(socket)
 
     {:ok, pid} =
-      Task.Supervisor.start_child(Protoh.TaskSupervisor, fn ->
+      Task.Supervisor.start_child(Protohackers.TaskSupervisor, fn ->
         serve(client)
       end)
 
