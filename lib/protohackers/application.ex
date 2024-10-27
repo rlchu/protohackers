@@ -7,9 +7,11 @@ defmodule Protohackers.Application do
 
   @impl true
   def start(_type, _args) do
+    port = String.to_integer(System.get_env("PORT") || "4040")
+
     children = [
-      # Starts a worker by calling: Protohackers.Worker.start_link(arg)
-      # {Protohackers.Worker, arg}
+      {Task.Supervisor, name: Protohackers.TaskSupervisor},
+      {Task, fn -> Protohackers.accept(port) end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
