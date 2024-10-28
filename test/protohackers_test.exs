@@ -1,9 +1,9 @@
-defmodule ProtohackersTest do
+defmodule ProtohTest do
   use ExUnit.Case
-  # doctest Protohackers
+  # doctest Protoh
 
   test "greets the world" do
-    Protohackers.TcpServer.init(4045)
+    Protoh.TcpServer.init(4045)
 
     assert :world == :world
   end
