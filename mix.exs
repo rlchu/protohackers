@@ -15,7 +15,7 @@ defmodule Protohackers.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Protohackers.Application, []}
+      mod: {Protoh.Application, []}
     ]
   end
 

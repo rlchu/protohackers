@@ -1,4 +1,4 @@
-defmodule Protohackers.Application do
+defmodule Protoh.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -10,13 +10,14 @@ defmodule Protohackers.Application do
     port = String.to_integer(System.get_env("PORT") || "4040")
 
     children = [
-      {Task.Supervisor, name: Protohackers.TaskSupervisor},
-      {Task, fn -> Protohackers.accept(port) end}
+      {Task.Supervisor, name: Protoh.TaskSupervisor},
+      # {Protoh.TcpListener, server: Protohacker.Echo.Server, port: 3000},
+      {Task, fn -> Protoh.accept(port) end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Protohackers.Supervisor]
+    opts = [strategy: :one_for_one, name: Protoh.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
