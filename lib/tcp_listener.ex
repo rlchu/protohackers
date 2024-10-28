@@ -1,18 +1,17 @@
 defmodule Protoh.TcpListener do
   # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
-  use GenServer
-
-  def start_link(default) when is_list(default) do
-    GenServer.start_link(__MODULE__, default)
-  end
-
-  # def start_link(opts) do
-  #   pid = spawn_link(__MODULE__, :init, [opts])
-  #   {:ok, pid}
+  # use GenServer
+  #
+  # def start_link(default) when is_list(default) do
+  #   GenServer.start_link(__MODULE__, default)
   # end
   #
-  #
+  def start_link(opts) do
+    pid = spawn_link(__MODULE__, :init, [opts])
+    {:ok, pid}
+  end
+
   def init(opts) do
     server = Keyword.fetch!(opts, :server)
     port = Keyword.fetch!(opts, :port)

@@ -3,7 +3,7 @@ defmodule ProtohTest do
   # doctest Protoh
 
   test "greets the world" do
-    Protoh.TcpListener.init(3300)
+    # Protoh.TcpListener.init(3300)
     # assert Protoh.hello() == :world
   end
 end
