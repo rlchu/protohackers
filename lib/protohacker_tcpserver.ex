@@ -1,4 +1,4 @@
-defmodule Protohackers do
+defmodule ProtohackerTcpServer do
   require Logger
   use GenServer
 
