@@ -18,7 +18,6 @@ defmodule Protoh.TcpListener do
     listen_opts = Keyword.get(opts, :listen_opts, [])
     server_opts = Keyword.get(opts, :server_opts, [])
     task_supervisor = Keyword.get(opts, :task_supervisor, [])
-    dbg(task_supervisor)
 
     listen(server, port, task_supervisor, listen_opts, server_opts)
   end

@@ -29,8 +29,6 @@ defmodule ProtohackerTest.EchoServerTest do
     {:ok, socket} =
       :gen_tcp.connect(:localhost, 5050, [{:active, false}, {:mode, :binary}, {:packet, :raw}])
 
-    dbg(socket)
-
     socket
   end
 end
