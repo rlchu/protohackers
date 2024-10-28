@@ -1,6 +1,6 @@
 defmodule ProtohTest do
   use ExUnit.Case
-  doctest Protoh
+  # doctest Protoh
 
   test "greets the world" do
     assert Protoh.hello() == :world

@@ -1,4 +1,4 @@
-defmodule Protoh do
+defmodule Protoh.TcpServer do
   # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
   # use GenServer
