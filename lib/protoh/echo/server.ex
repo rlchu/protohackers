@@ -1,6 +1,7 @@
 defmodule Protoh.Echo.Server do
   require Logger
 
+  def start(socket), do: serve(socket)
   def start(socket, _opts), do: serve(socket)
 
   defp serve(socket) do

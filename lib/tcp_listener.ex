@@ -19,6 +19,7 @@ defmodule Protoh.TcpListener do
     listen_opts = Keyword.get(opts, :listen_opts, [])
     server_opts = Keyword.get(opts, :server_opts, [])
     task_supervisor = Keyword.get(opts, :task_supervisor, [])
+    dbg(task_supervisor)
 
     listen(server, port, task_supervisor, listen_opts, server_opts)
   end
@@ -31,22 +32,22 @@ defmodule Protoh.TcpListener do
     # 3. `active: false` - blocks on `:gen_tcp.recv/2` until data is available
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener(crashes)
 
-    {:ok, socket} =
-      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+    {:ok, listen_socket} =
+      :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true])
 
-    Logger.info("Accepting connections on port #{port}")
-    loop_acceptor(socket, server)
+    Logger.debug("#{inspect(server)}: Accepting connections on port #{port}")
+
+    accept_client(server, listen_socket)
   end
 
-  defp loop_acceptor(socket, server) do
-    {:ok, _client} = :gen_tcp.accept(socket)
+  defp accept_client(server, listen_socket) do
+    {:ok, client_socket} = :gen_tcp.accept(listen_socket)
 
     Task.Supervisor.async(Protoh.TaskSupervisor, fn ->
-      server.start(socket)
+      server.start(client_socket)
     end)
 
-    # :ok = :gen_tcp.controlling_process(client, pid)
-    loop_acceptor(socket, server)
+    accept_client(server, listen_socket)
   end
 
   # ** (ArgumentError) The module Protohackers was given as a child to a supervisor

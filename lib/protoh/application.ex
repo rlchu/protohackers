@@ -11,7 +11,7 @@ defmodule Protoh.Application do
 
     children = [
       {Task.Supervisor, name: Protoh.TaskSupervisor},
-      {Protoh.TcpListener, server: Proto.Echo.Server, port: port}
+      {Protoh.TcpListener, server: Protoh.Echo.Server, port: port}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
