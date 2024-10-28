@@ -11,7 +11,7 @@ defmodule Protohackers.Application do
 
     children = [
       {Task.Supervisor, name: Protohackers.TaskSupervisor},
-      {Task, fn -> Protohackers.accept(port) end}
+      {Protohacker.TcpServer, server: Protohacker.Echo.Server, port: port}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

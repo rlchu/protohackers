@@ -1,15 +1,20 @@
 defmodule Protohackers do
-  # taken basically straight from:
-  # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
+  use GenServer
 
-  def accept(port) do
+  def start_link(default) when is_list(default) do
+    GenServer.start_link(__MODULE__, default)
+  end
+
+  def init(_opts) do
     # The options below mean:
     #
     # 1. `:binary` - receives data as binaries (instead of lists)
     # 2. `packet: :line` - receives data line by line
     # 3. `active: false` - blocks on `:gen_tcp.recv/2` until data is available
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener(crashes)
+
+    port = 4040
 
     {:ok, socket} =
       :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
