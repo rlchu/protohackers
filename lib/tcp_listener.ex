@@ -39,14 +39,13 @@ defmodule Protoh.TcpListener do
   end
 
   defp loop_acceptor(socket, server) do
-    {:ok, client} = :gen_tcp.accept(socket)
+    {:ok, _client} = :gen_tcp.accept(socket)
 
-    {:ok, pid} =
-      Task.Supervisor.start_child(Protoh.TaskSupervisor, fn ->
-        server.start(client)
-      end)
+    Task.Supervisor.async(Protoh.TaskSupervisor, fn ->
+      server.start(socket)
+    end)
 
-    :ok = :gen_tcp.controlling_process(client, pid)
+    # :ok = :gen_tcp.controlling_process(client, pid)
     loop_acceptor(socket, server)
   end
 
