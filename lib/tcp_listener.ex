@@ -1,13 +1,29 @@
 defmodule Protoh.TcpListener do
   # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
-  # use GenServer
+  use GenServer
 
-  # def start_link(default) when is_list(default) do
-  #   GenServer.start_link(__MODULE__, default)
+  def start_link(default) when is_list(default) do
+    GenServer.start_link(__MODULE__, default)
+  end
+
+  # def start_link(opts) do
+  #   pid = spawn_link(__MODULE__, :init, [opts])
+  #   {:ok, pid}
   # end
   #
-  def init(%{port: port, server: server}) do
+  #
+  def init(opts) do
+    server = Keyword.fetch!(opts, :server)
+    port = Keyword.fetch!(opts, :port)
+    listen_opts = Keyword.get(opts, :listen_opts, [])
+    server_opts = Keyword.get(opts, :server_opts, [])
+    task_supervisor = Keyword.get(opts, :task_supervisor, [])
+
+    listen(server, port, task_supervisor, listen_opts, server_opts)
+  end
+
+  def listen(server, port, _task_supervisor, _listen_opts, _server_opts) do
     # The options below mean:
     #
     # 1. `:binary` - receives data as binaries (instead of lists)
@@ -19,36 +35,19 @@ defmodule Protoh.TcpListener do
       :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
 
     Logger.info("Accepting connections on port #{port}")
-    loop_acceptor(socket)
+    loop_acceptor(socket, server)
   end
 
-  defp loop_acceptor(socket) do
+  defp loop_acceptor(socket, server) do
     {:ok, client} = :gen_tcp.accept(socket)
 
     {:ok, pid} =
       Task.Supervisor.start_child(Protoh.TaskSupervisor, fn ->
-        serve(client)
+        server.start(client)
       end)
 
     :ok = :gen_tcp.controlling_process(client, pid)
-    loop_acceptor(socket)
-  end
-
-  defp serve(socket) do
-    socket
-    |> read_line()
-    |> write_line(socket)
-
-    serve(socket)
-  end
-
-  defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    data
-  end
-
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
+    loop_acceptor(socket, server)
   end
 
   # ** (ArgumentError) The module Protohackers was given as a child to a supervisor
