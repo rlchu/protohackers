@@ -24,3 +24,6 @@ protohackers-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# ds_Store
+**/.DS_Store
