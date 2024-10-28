@@ -46,4 +46,29 @@ defmodule Protohackers do
   defp write_line(line, socket) do
     :gen_tcp.send(socket, line)
   end
+
+  # ** (ArgumentError) The module Protohackers was given as a child to a supervisor
+  #    but it does not implement child_spec/1.
+  #
+  #    If you own the given module, please define a child_spec/1 function
+  #    that receives an argument and returns a child specification as a map.
+  #    For example:
+  #
+  #        def child_spec(opts) do
+  #          %{
+  #            id: __MODULE__,
+  #            start: {__MODULE__, :start_link, [opts]},
+  #            type: :worker,
+  #            restart: :permanent,
+  #            shutdown: 500
+  #          }
+  #        end
+  #
+
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]}
+    }
+  end
 end
