@@ -27,15 +27,15 @@ defmodule ProtohackerTest.VariableMessageSizeTest do
       do: extract_string(rest, string <> <<char>>)
   end
 
-  @port 9000
-  setup do
-    start_supervised!({
-      Protohackers,
-      server: TestServer, port: @port, listen_opts: [packet: 4], server_opts: [test_pid: self()]
-    })
-
-    :ok
-  end
+  # @port 9000
+  # setup do
+  #   start_supervised!({
+  #     Protohackers,
+  #     server: TestServer, port: @port, listen_opts: [packet: 4], server_opts: [test_pid: self()]
+  #   })
+  #
+  #   :ok
+  # end
 
   test "greets the world" do
     {:ok, socket} =
