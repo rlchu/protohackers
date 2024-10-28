@@ -1,4 +1,5 @@
-defmodule Protohackers.TcpServer do
+defmodule Protoh do
+  # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
   # use GenServer
 
@@ -25,7 +26,7 @@ defmodule Protohackers.TcpServer do
     {:ok, client} = :gen_tcp.accept(socket)
 
     {:ok, pid} =
-      Task.Supervisor.start_child(Protohackers.TaskSupervisor, fn ->
+      Task.Supervisor.start_child(Protoh.TaskSupervisor, fn ->
         serve(client)
       end)
 
