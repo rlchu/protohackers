@@ -1,4 +1,4 @@
-defmodule Protoh.TcpServer do
+defmodule Protoh.TcpListener do
   # https://hexdocs.pm/elixir/task-and-gen-tcp.html
   require Logger
   # use GenServer
@@ -7,7 +7,7 @@ defmodule Protoh.TcpServer do
   #   GenServer.start_link(__MODULE__, default)
   # end
   #
-  def init(port) do
+  def init(%{port: port, server: server}) do
     # The options below mean:
     #
     # 1. `:binary` - receives data as binaries (instead of lists)

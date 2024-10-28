@@ -1,4 +1,4 @@
-defmodule Protohacker.BinaryShorthand do
+defmodule Protoh.BinaryShorthand do
   @moduledoc """
   Shorthand for common binary pattern specifiers
   """
