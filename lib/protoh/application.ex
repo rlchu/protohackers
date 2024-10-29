@@ -7,11 +7,10 @@ defmodule Protoh.Application do
 
   @impl true
   def start(_type, _args) do
-    port = String.to_integer(System.get_env("PORT") || "5050")
-
     children = [
       {Task.Supervisor, name: Protoh.TaskSupervisor},
-      {Protoh.TcpListener, server: Protoh.Echo.Server, port: port}
+      {Protoh.TcpListener, server: Protoh.Echo.Server, port: 5050},
+      {Protoh.TcpListener, server: Protoh.Prime.Server, port: 5051}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
