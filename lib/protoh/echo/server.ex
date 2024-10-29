@@ -24,7 +24,6 @@ defmodule Protoh.Echo.Server do
   end
 
   defp close(socket) do
-    # this is leaving a dangling looping proceess after closing?
     Logger.debug("#{inspect(__MODULE__)}: Client Closed (#{inspect(socket)})")
     :gen_tcp.close(socket)
   end
