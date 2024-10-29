@@ -1,33 +1,10 @@
-defmodule Protoh.Prime.Server do
+defmodule Protoh.Prime.Server.Bak do
   require Logger
 
   def start(socket), do: serve(socket)
   def start(socket, _opts), do: serve(socket)
-  #
-  # defp serve(socket) do
-  #   dbg()
-  #
-  #   data =
-  #     case :gen_tcp.recv(socket, 0) do
-  #       {:ok, data} -> data
-  #       _ -> 0
-  #     end
-  #
-  #   {:ok, %{"method" => _method, "number" => number}} = Jason.decode(data)
-  #
-  #   is_prime = check_prime(number)
-  #
-  #   response = %{method: "isPrime", prime: is_prime}
-  #
-  #   {:ok, response_data} = Jason.encode(response)
-  #   :ok = :gen_tcp.send(socket, response_data)
-  #   dbg()
-  #   serve(socket)
-  # end
-  #
-  defp serve(socket) do
-    dbg()
 
+  defp serve(socket) do
     with {:ok, data} <- :gen_tcp.recv(socket, 0),
          {:ok, json_data} <- get_json(data) do
       {:ok, encoded_json_response} =
@@ -35,14 +12,14 @@ defmodule Protoh.Prime.Server do
         |> check_prime()
         |> Jason.encode()
 
-      a = :gen_tcp.send(socket, encoded_json_response)
+      :gen_tcp.send(socket, encoded_json_response <> "\n")
       dbg()
       serve(socket)
     else
-      error ->
-        Logger.debug(error)
+      _error ->
+        dbg()
         # Logger.debug("#{inspect(__MODULE__)}: Client Closed (#{inspect(socket)})")
-        # :gen_tcp.close(socket)
+        :gen_tcp.close(socket)
     end
   end
 
@@ -51,7 +28,7 @@ defmodule Protoh.Prime.Server do
   end
 
   defp get_json(data) do
-    de = Jason.decode(data)
     dbg()
+    Jason.decode(data)
   end
 end
