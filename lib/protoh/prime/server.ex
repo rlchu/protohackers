@@ -1,34 +1,34 @@
-defmodule Protoh.Prime.Server.Bak do
+defmodule Protoh.Prime.Server do
   require Logger
 
   def start(socket), do: serve(socket)
   def start(socket, _opts), do: serve(socket)
 
-  defp serve(socket) do
-    with {:ok, data} <- :gen_tcp.recv(socket, 0),
-         {:ok, json_data} <- get_json(data) do
-      {:ok, encoded_json_response} =
-        json_data
-        |> check_prime()
-        |> Jason.encode()
+  defp parse_tcp_receive({:ok, data}), do: data
+  defp parse_tcp_receive({:error, error}), do: "error!"
 
-      :gen_tcp.send(socket, encoded_json_response <> "\n")
-      dbg()
-      serve(socket)
+  defp serve(socket) do
+    answer =
+      case :gen_tcp.recv(socket, 0) do
+        {:ok, data} -> data
+        _error -> "error!"
+      end
+
+    if answer == "error!" do
+      Logger.debug("error!!")
+      :gen_tcp.close(socket)
     else
-      _error ->
-        dbg()
-        # Logger.debug("#{inspect(__MODULE__)}: Client Closed (#{inspect(socket)})")
-        :gen_tcp.close(socket)
+      {:ok, resp} = build_response(Jason.decode(answer))
+      {:ok, resp} = Jason.encode(resp)
+      :gen_tcp.send(socket, enc_resp <> "\n")
+      serve(socket)
     end
   end
 
-  defp check_prime(%{"number" => number} = json_data) do
-    Map.put(json_data, "isPrime", Prime.test(number))
+  defp build_response({:ok, %{"method" => "isPrime", "number" => number}})
+       when is_number(number) do
+    {:ok, %{"method" => "isPrime", "prime" => Prime.test(number)}}
   end
 
-  defp get_json(data) do
-    dbg()
-    Jason.decode(data)
-  end
+  # defp build_response(_), do: {:error, :invalid_object}
 end

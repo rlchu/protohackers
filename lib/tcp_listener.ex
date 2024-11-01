@@ -31,7 +31,7 @@ defmodule Protoh.TcpListener do
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener(crashes)
 
     {:ok, listen_socket} =
-      :gen_tcp.listen(port, [:binary, packet: :raw, active: false, reuseaddr: true])
+      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
 
     Logger.debug("#{inspect(server)}: Accepting connections on port #{port}")
 
