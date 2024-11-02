@@ -9,8 +9,9 @@ defmodule Protoh.Application do
   def start(_type, _args) do
     children = [
       {Task.Supervisor, name: Protoh.TaskSupervisor},
-      {Protoh.TcpListener, server: Protoh.Echo.Server, port: 5050},
-      {Protoh.TcpListener, server: Protoh.Prime.Server, port: 5051}
+      # {Protoh.TcpListener, server: Protoh.Echo.Server, port: 5050},
+      # {Protoh.TcpListener, server: Protoh.Prime.Server, port: 5051},
+      {Protoh.TcpListener, server: Protoh.Means.Server, port: 5052}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
