@@ -23,6 +23,7 @@ defmodule Protoh.TcpListener do
   end
 
   def listen(server, port, _task_supervisor, _listen_opts, _server_opts) do
+    # fix this doc
     # The options below mean:
     #
     # 1. `:binary` - receives data as binaries (instead of lists)
@@ -31,7 +32,13 @@ defmodule Protoh.TcpListener do
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener(crashes)
 
     {:ok, listen_socket} =
-      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+      :gen_tcp.listen(port, [
+        :binary,
+        packet: :line,
+        active: false,
+        reuseaddr: true,
+        buffer: 1024 * 1000
+      ])
 
     Logger.debug("#{inspect(server)}: Accepting connections on port #{port}")
 

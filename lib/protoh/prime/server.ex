@@ -4,9 +4,6 @@ defmodule Protoh.Prime.Server do
   def start(socket), do: serve(socket)
   def start(socket, _opts), do: serve(socket)
 
-  defp parse_tcp_receive({:ok, data}), do: data
-  defp parse_tcp_receive({:error, error}), do: "error!"
-
   defp serve(socket) do
     answer =
       case :gen_tcp.recv(socket, 0) do
@@ -15,12 +12,17 @@ defmodule Protoh.Prime.Server do
       end
 
     if answer == "error!" do
-      Logger.debug("error!!")
       :gen_tcp.close(socket)
     else
-      {:ok, resp} = build_response(Jason.decode(answer))
-      {:ok, resp} = Jason.encode(resp)
-      :gen_tcp.send(socket, enc_resp <> "\n")
+      try do
+        {:ok, resp} = build_response(Jason.decode(answer))
+        {:ok, enc_resp} = Jason.encode(resp)
+        :gen_tcp.send(socket, enc_resp <> "\n")
+      rescue
+        _ -> :gen_tcp.send(socket, "\n")
+      end
+
+      dbg()
       serve(socket)
     end
   end
@@ -30,5 +32,5 @@ defmodule Protoh.Prime.Server do
     {:ok, %{"method" => "isPrime", "prime" => Prime.test(number)}}
   end
 
-  # defp build_response(_), do: {:error, :invalid_object}
+  defp build_response(_), do: {:error, :invalid_object}
 end
