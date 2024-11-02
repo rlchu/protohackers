@@ -22,7 +22,6 @@ defmodule Protoh.Prime.Server do
         _ -> :gen_tcp.send(socket, "\n")
       end
 
-      dbg()
       serve(socket)
     end
   end
