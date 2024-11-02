@@ -30,6 +30,7 @@ defmodule Protoh.TcpListener do
     # 2. `packet: :line` - receives data line by line
     # 3. `active: false` - blocks on `:gen_tcp.recv/2` until data is available
     # 4. `reuseaddr: true` - allows us to reuse the address if the listener(crashes)
+    # 5. `buffer`: 1024 * 1000 -  ?
 
     {:ok, listen_socket} =
       :gen_tcp.listen(port, [

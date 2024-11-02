@@ -32,13 +32,13 @@ defmodule Protoh.Prime.Server do
     {:ok, %{"method" => "isPrime", "prime" => is_prime(number)}}
   end
 
-  defp is_prime(number) when is_integer(number) do
-    Prime.test(number)
-  end
+  defp build_response(_), do: {:error, :invalid_object}
 
   defp is_prime(number) when is_float(number) do
     false
   end
 
-  defp build_response(_), do: {:error, :invalid_object}
+  defp is_prime(number) do
+    Prime.test(number)
+  end
 end
