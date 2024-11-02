@@ -5,14 +5,39 @@ defmodule Protoh.Prime.Server do
   def start(socket, _opts), do: serve(socket)
 
   defp serve(socket) do
-    IO.inspect(:gen_tcp.recv(socket, 0))
-    #   with {:ok, data} <- :gen_tcp.recv(socket, 0),
-    #        :ok <- :gen_tcp.send(socket, data) do
-    #     serve(socket)
-    #   else
-    #     _error ->
-    #       Logger.debug("#{inspect(__MODULE__)}: Client Closed (#{inspect(socket)})")
-    #       :gen_tcp.close(socket)
-    #   end
+    answer =
+      case :gen_tcp.recv(socket, 0) do
+        {:ok, data} -> data
+        _error -> "error!"
+      end
+
+    if answer == "error!" do
+      :gen_tcp.close(socket)
+    else
+      try do
+        {:ok, resp} = build_response(Jason.decode(answer))
+        {:ok, enc_resp} = Jason.encode(resp)
+        :gen_tcp.send(socket, enc_resp <> "\n")
+      rescue
+        _ -> :gen_tcp.send(socket, "\n")
+      end
+
+      serve(socket)
+    end
+  end
+
+  defp build_response({:ok, %{"method" => "isPrime", "number" => number}})
+       when is_number(number) do
+    {:ok, %{"method" => "isPrime", "prime" => is_prime(number)}}
+  end
+
+  defp build_response(_), do: {:error, :invalid_object}
+
+  defp is_prime(number) when is_float(number) do
+    false
+  end
+
+  defp is_prime(number) do
+    Prime.test(number)
   end
 end
