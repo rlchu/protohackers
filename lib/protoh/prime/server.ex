@@ -5,33 +5,28 @@ defmodule Protoh.Prime.Server do
   def start(socket, _opts), do: serve(socket)
 
   defp serve(socket) do
-    answer =
-      case :gen_tcp.recv(socket, 0) do
-        {:ok, data} -> data
-        _error -> "error!"
-      end
-
-    if answer == "error!" do
-      :gen_tcp.close(socket)
-    else
-      try do
-        {:ok, resp} = build_response(Jason.decode(answer))
-        {:ok, enc_resp} = Jason.encode(resp)
-        :gen_tcp.send(socket, enc_resp <> "\n")
-      rescue
-        _ -> :gen_tcp.send(socket, "\n")
-      end
-
+    with {:ok, data} <- :gen_tcp.recv(socket, 0),
+         {:ok, input} <- Jason.decode(data),
+         response <- build_response(input),
+         {:ok, enc_resp} <- Jason.encode(response) do
+      dbg()
+      dbg(enc_resp)
+      :gen_tcp.send(socket, enc_resp <> "\n")
       serve(socket)
+    else
+      _error ->
+        :gen_tcp.close(socket)
     end
   end
 
-  defp build_response({:ok, %{"method" => "isPrime", "number" => number}})
+  defp build_response(%{"method" => "isPrime", "number" => number})
        when is_number(number) do
-    {:ok, %{"method" => "isPrime", "prime" => is_prime(number)}}
+    %{"method" => "isPrime", "prime" => is_prime(number)}
   end
 
-  defp build_response(_), do: {:error, :invalid_object}
+  defp build_response(inputs) do
+    {:error, :invalid_object}
+  end
 
   defp is_prime(number) when is_float(number) do
     false
