@@ -9,8 +9,6 @@ defmodule Protoh.Prime.Server do
          {:ok, input} <- Jason.decode(data),
          response <- build_response(input),
          {:ok, enc_resp} <- Jason.encode(response) do
-      dbg()
-      dbg(enc_resp)
       :gen_tcp.send(socket, enc_resp <> "\n")
       serve(socket)
     else
