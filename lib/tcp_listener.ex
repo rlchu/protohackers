@@ -36,6 +36,7 @@ defmodule Protoh.TcpListener do
       :gen_tcp.listen(port, [
         :binary,
         packet: :line,
+        # packet: :raw,
         active: false,
         reuseaddr: true,
         buffer: 1024 * 1000
