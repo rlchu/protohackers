@@ -22,7 +22,7 @@ defmodule Protoh.Prime.Server do
     %{"method" => "isPrime", "prime" => is_prime(number)}
   end
 
-  defp build_response(inputs) do
+  defp build_response(_inputs) do
     {:error, :invalid_object}
   end
 

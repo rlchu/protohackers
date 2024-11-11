@@ -22,7 +22,7 @@ defmodule Protoh.Means.Server do
   # byte_size(<<81, 0, 0, 48, 0, 0, 0, 64, 0>>)
   #
   # <<head::binary-size(1), more::binary-size(4), more2::binary-size(4)>> =
-  #   <<81, 0, 0, 48, 0, 0, 0, 64, 0>>
+  #   <<81, 0, 0, 48, 0, 0, 0, 64, 0>
 
   defp examine_incoming(
          <<"I", timestamp::signed-integer-size(32), price::signed-integer-size(32)>>
